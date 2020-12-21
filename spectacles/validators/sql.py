@@ -6,6 +6,7 @@ from spectacles.lookml import Dimension, Explore
 from spectacles.types import QueryMode
 from spectacles.exceptions import SpectaclesException, SqlError
 from spectacles.logger import GLOBAL_LOGGER as logger
+from tqdm import tqdm
 
 
 class Query:
@@ -136,7 +137,8 @@ class SqlValidator(Validator):
     ) -> List[Query]:
         """Creates individual queries for each dimension in an explore"""
         queries = []
-        for dimension in explore.dimensions:
+        logger.info("\n\n" + "Creating queries...")
+        for dimension in tqdm(explore.dimensions):
             query = self.client.create_query(model_name, explore.name, [dimension.name])
             query = Query(
                 query["id"], lookml_ref=dimension, explore_url=query["share_url"]
@@ -148,6 +150,10 @@ class SqlValidator(Validator):
         """Creates and runs queries with a maximum concurrency defined by query slots"""
         QUERY_TASK_LIMIT = 250
 
+        logger.info("\n\n" + "Executing queries...")
+
+        progress_bar = tqdm(total=len(queries))
+
         while queries or self._running_queries:
             if queries:
                 logger.debug(f"Starting a new loop, {len(queries)} queries queued")
@@ -156,7 +162,11 @@ class SqlValidator(Validator):
             logger.debug(f"Checking for results of {len(query_tasks)} query tasks")
             for query_result in self._get_query_results(query_tasks):
                 self._handle_query_result(query_result)
-            time.sleep(0.5)
+            progress_bar.update(1)
+            logger.debug(f"queries len is {len(queries)}")
+            time.sleep(2)
+
+        progress_bar.close()
 
     def _fill_query_slots(self, queries: List[Query]) -> None:
         """Creates query tasks until all slots are used or all queries are running"""

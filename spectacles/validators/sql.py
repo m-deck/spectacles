@@ -152,7 +152,8 @@ class SqlValidator(Validator):
 
         logger.info("\n\n" + "Executing queries...")
 
-        progress_bar = tqdm(total=len(queries))
+        len_queries = len(queries)
+        progress_bar = tqdm(total=len_queries)
 
         while queries or self._running_queries:
             if queries:
@@ -162,9 +163,9 @@ class SqlValidator(Validator):
             logger.debug(f"Checking for results of {len(query_tasks)} query tasks")
             for query_result in self._get_query_results(query_tasks):
                 self._handle_query_result(query_result)
-            progress_bar.update(1)
-            logger.debug(f"queries len is {len(queries)}")
-            time.sleep(2)
+            progress_bar.update(len_queries - len(queries))
+            len_queries = len(queries)
+            time.sleep(0.5)
 
         progress_bar.close()
 

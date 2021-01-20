@@ -261,6 +261,9 @@ class SqlValidator(Validator):
                 )
             except StopIteration:
                 return None
+            except AttributeError:
+                logger.debug(f"AttributeError, ignoring")
+                return None
             message = " ".join(
                 filter(
                     None,

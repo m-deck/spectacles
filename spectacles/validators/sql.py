@@ -6,7 +6,7 @@ from spectacles.lookml import Dimension, Explore
 from spectacles.types import QueryMode
 from spectacles.exceptions import SpectaclesException, SqlError
 from spectacles.logger import GLOBAL_LOGGER as logger
-from tqdm import tqdm
+from tqdm import tqdm # type: ignore
 
 
 class Query:

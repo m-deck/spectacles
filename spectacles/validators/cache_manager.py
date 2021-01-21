@@ -9,6 +9,7 @@ import spectacles.utils as utils
 from requests.exceptions import Timeout
 from tqdm import tqdm  # type: ignore
 import backoff  # type: ignore
+import time
 
 TIMEOUT_SEC = 300
 
@@ -111,7 +112,7 @@ class CacheManager(SqlValidator):
         self._running_queries: List[Query] = []
         self._query_by_task_id: Dict[str, Query] = {}
 
-    def _run_queries(self, queries: List[CacheQuery]) -> None:
+    def _run_queries(self, queries: List[CacheQuery]) -> None:  # type: ignore[override]
         """Creates and runs queries with a maximum concurrency defined by query slots"""
         QUERY_TASK_LIMIT = 250
 

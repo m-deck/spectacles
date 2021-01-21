@@ -112,6 +112,19 @@ class CacheManager(SqlValidator):
         self._running_queries: List[Query] = []
         self._query_by_task_id: Dict[str, Query] = {}
 
+    def _fill_query_slots(self, queries: List[CacheQuery]) -> None:
+            """Creates query tasks until all slots are used or all queries are running"""
+        while queries and self.query_slots > 0:
+            logger.debug(
+                f"{self.query_slots} available query slots, creating query task"
+            )
+            query = queries.pop(0)
+            query_task_id = self.client.create_query_task(query.query_id)
+            self.query_slots -= 1
+            query.query_task_id = query_task_id
+            self._query_by_task_id[query_task_id] = query
+            self._running_queries.append(query)
+
     def _run_queries(self, queries: List[CacheQuery]) -> None:  # type: ignore[override]
         """Creates and runs queries with a maximum concurrency defined by query slots"""
         QUERY_TASK_LIMIT = 250

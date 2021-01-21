@@ -4,7 +4,7 @@ from spectacles.validators.sql import Query, QueryResult, SqlValidator
 from spectacles.logger import GLOBAL_LOGGER as logger
 from spectacles.exceptions import LookerApiError, SqlError
 from spectacles.lookml import Dimension, Explore
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Any
 import spectacles.utils as utils
 from requests.exceptions import Timeout
 from tqdm import tqdm  # type: ignore
@@ -17,7 +17,7 @@ class CacheQuery(Query):
     def __init__(
             self,
             query_id: str,
-            lookml_ref: None = None,
+            lookml_ref: Any = None,
             explore_url: Optional[str] = None,
             query_task_id: Optional[str] = None,
     ):

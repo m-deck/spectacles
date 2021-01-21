@@ -3,7 +3,6 @@ from spectacles.client import LookerClient
 from spectacles.validators.sql import Query, QueryResult, SqlValidator
 from spectacles.logger import GLOBAL_LOGGER as logger
 from spectacles.exceptions import LookerApiError, SqlError
-from spectacles.lookml import Dimension
 from typing import Dict, List, Optional
 import spectacles.utils as utils
 from requests.exceptions import Timeout
@@ -171,7 +170,3 @@ class CacheManager(SqlValidator):
                 )
                 return sql_error
         return None
-
-
-
-

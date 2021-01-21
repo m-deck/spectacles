@@ -17,12 +17,12 @@ class CacheQuery(Query):
     def __init__(
             self,
             query_id: str,
-            lookml_ref: Optional[Union[Dimension, Explore]] = None,
+            #lookml_ref: Optional[Union[Dimension, Explore]] = None,
             explore_url: Optional[str] = None,
             query_task_id: Optional[str] = None,
     ):
         self.query_id = query_id
-        self.lookml_ref = lookml_ref
+        self.lookml_ref = None
         self.explore_url = explore_url
         self.query_task_id = query_task_id
 

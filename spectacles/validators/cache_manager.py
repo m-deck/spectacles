@@ -154,28 +154,21 @@ class CacheManager(SqlValidator):
         if result.status in ("complete", "error"):
             self._running_queries.remove(query)
             self.query_slots += 1
-            lookml_object = query.lookml_ref
-            #lookml_object.queried = True
 
             if result.status == "error" and result.error:
                 print(str(result.error))
-                model_name = "none"#lookml_object.model_name
+                model_name = "none"
                 dimension_name: Optional[str] = None
-                if isinstance(lookml_object, Dimension):
-                    explore_name = lookml_object.explore_name
-                    dimension_name = lookml_object.name
-                else:
-                    explore_name = "none"#lookml_object.name
+                explore_name = "none"
 
                 sql_error = SqlError(
                     model=model_name,
                     explore=explore_name,
                     dimension=dimension_name,
-                    explore_url=query.explore_url,
-                    lookml_url=getattr(lookml_object, "url", None),
+                    explore_url="none",
+                    lookml_url=None,
                     **result.error,
                 )
-                #lookml_object.errors.append(sql_error)
                 return sql_error
         return None
 

@@ -112,7 +112,7 @@ class CacheManager(SqlValidator):
         self._running_queries: List[Query] = []
         self._query_by_task_id: Dict[str, Query] = {}
 
-    def _fill_query_slots(self, queries: List[CacheQuery]) -> None:
+    def _fill_query_slots(self, queries: List[CacheQuery]) -> None:  # type: ignore[override]
             """Creates query tasks until all slots are used or all queries are running"""
         while queries and self.query_slots > 0:
             logger.debug(

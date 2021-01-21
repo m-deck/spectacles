@@ -3,8 +3,8 @@ from spectacles.client import LookerClient
 from spectacles.validators.sql import Query, QueryResult, SqlValidator
 from spectacles.logger import GLOBAL_LOGGER as logger
 from spectacles.exceptions import LookerApiError, SqlError
-from spectacles.lookml import Dimension, Explore
-from typing import Dict, List, Optional, Union, Any
+from spectacles.lookml import Dimension
+from typing import Dict, List, Optional
 import spectacles.utils as utils
 from requests.exceptions import Timeout
 from tqdm import tqdm  # type: ignore
@@ -18,13 +18,9 @@ class CacheQuery(Query):
     def __init__(
             self,
             query_id: str,
-            #lookml_ref: Union[Dimension, Explore],
-            #explore_url: Optional[str] = None,
             query_task_id: Optional[str] = None,
     ):
         self.query_id = query_id
-        #self.lookml_ref = lookml_ref
-        #self.explore_url = explore_url
         self.query_task_id = query_task_id
 
 

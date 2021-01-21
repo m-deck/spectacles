@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Union
 import spectacles.utils as utils
 from requests.exceptions import Timeout
 from tqdm import tqdm  # type: ignore
-import backoff
+import backoff  # type: ignore
 
 TIMEOUT_SEC = 300
 

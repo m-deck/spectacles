@@ -18,12 +18,12 @@ class CacheQuery(Query):
             self,
             query_id: str,
             #lookml_ref: Union[Dimension, Explore],
-            explore_url: Optional[str] = None,
+            #explore_url: Optional[str] = None,
             query_task_id: Optional[str] = None,
     ):
         self.query_id = query_id
         #self.lookml_ref = lookml_ref
-        self.explore_url = explore_url
+        #self.explore_url = explore_url
         self.query_task_id = query_task_id
 
 

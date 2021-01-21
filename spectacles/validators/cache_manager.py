@@ -15,9 +15,9 @@ TIMEOUT_SEC = 300
 
 class CacheQuery(Query):
     def __init__(
-            self,
-            query_id: str,
-            query_task_id: Optional[str] = None,
+        self,
+        query_id: str,
+        query_task_id: Optional[str] = None,
     ):
         self.query_id = query_id
         self.query_task_id = query_task_id
@@ -76,7 +76,9 @@ class LookerCacheClient(LookerClient):
         return response
 
 
-def dashboard_ids_to_query_ids(client: LookerCacheClient, dashboard_ids_list: List[str]):
+def dashboard_ids_to_query_ids(
+    client: LookerCacheClient, dashboard_ids_list: List[str]
+):
 
     query_ids_to_cache = []
 
@@ -84,11 +86,11 @@ def dashboard_ids_to_query_ids(client: LookerCacheClient, dashboard_ids_list: Li
 
     for dashboard_id in tqdm(dashboard_ids_list):
         dashboard_obj = client.dashboard(dashboard_id).json()
-        for dashboard_element in tqdm(dashboard_obj['dashboard_elements']):
+        for dashboard_element in tqdm(dashboard_obj["dashboard_elements"]):
             try:
                 if dashboard_element is not None:
-                    if dashboard_element['query_id'] is not None:
-                        query_ids_to_cache.append(dashboard_element['query_id'])
+                    if dashboard_element["query_id"] is not None:
+                        query_ids_to_cache.append(dashboard_element["query_id"])
                 else:
                     print("dashboard_element is None, skipping")
             except AttributeError:

@@ -17,7 +17,7 @@ class CacheQuery(Query):
     def __init__(
             self,
             query_id: str,
-            lookml_ref: Any = None,
+            lookml_ref: Union[Dimension, Explore] = None,
             explore_url: Optional[str] = None,
             query_task_id: Optional[str] = None,
     ):

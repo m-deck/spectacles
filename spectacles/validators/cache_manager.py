@@ -111,7 +111,28 @@ class CacheManager(SqlValidator):
         self._running_queries: List[Query] = []
         self._query_by_task_id: Dict[str, Query] = {}
 
-    #def query_ids_to_query_objs(self, query_ids_list: List[int]):
+    def _run_queries(self, queries: List[CacheQuery]) -> None:
+        """Creates and runs queries with a maximum concurrency defined by query slots"""
+        QUERY_TASK_LIMIT = 250
+
+        logger.info("\n\n" + "Executing queries...")
+
+        len_queries = len(queries)
+        progress_bar = tqdm(total=len_queries)
+
+        while queries or self._running_queries:
+            if queries:
+                logger.debug(f"Starting a new loop, {len(queries)} queries queued")
+                self._fill_query_slots(queries)
+            query_tasks = self.get_running_query_tasks()[:QUERY_TASK_LIMIT]
+            logger.debug(f"Checking for results of {len(query_tasks)} query tasks")
+            for query_result in self._get_query_results(query_tasks):
+                self._handle_query_result(query_result)
+            progress_bar.update(len_queries - len(queries))
+            len_queries = len(queries)
+            time.sleep(0.5)
+
+        progress_bar.close()
 
     def touch_cache(self, query_ids_list: List[int]):
         queries = [CacheQuery(query_id=str(id)) for id in query_ids_list]

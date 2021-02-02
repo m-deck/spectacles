@@ -84,9 +84,9 @@ def dashboard_ids_to_query_ids(
 
     print("converting dashboard id list to query id list...")
 
-    for dashboard_id in tqdm(dashboard_ids_list):
+    for dashboard_id in dashboard_ids_list:
         dashboard_obj = client.dashboard(dashboard_id).json()
-        for dashboard_element in tqdm(dashboard_obj["dashboard_elements"]):
+        for dashboard_element in dashboard_obj["dashboard_elements"]:
             try:
                 if dashboard_element is not None:
                     if dashboard_element["query_id"] is not None:

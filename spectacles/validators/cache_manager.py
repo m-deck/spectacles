@@ -27,7 +27,7 @@ class LookerCacheClient(LookerClient):
 
     # create_query_task is overridden to add cache=True to body
     @backoff.on_exception(backoff.expo, (Timeout,), max_tries=2)
-    def create_query_task(self, query_id: int) -> str:
+    def create_query_task(self, query_id: int, reset: bool) -> str:
         """Runs a previously created query asynchronously and returns the query task ID.
 
         If a ClientError or TimeoutError is received, attempts to retry.
@@ -47,8 +47,13 @@ class LookerCacheClient(LookerClient):
 
         url = utils.compose_url(self.api_url, path=["query_tasks"])
 
+        if reset:
+            reset_string = "false"  # user-facing value of "reset" indicates whether to bust the cache. API is opposite
+        else:
+            reset_string = "true"
+
         response = self.post(
-            url=url, json=body, params={"cache": "true"}, timeout=TIMEOUT_SEC
+            url=url, json=body, params={"cache": reset_string}, timeout=TIMEOUT_SEC
         )
 
         try:
@@ -109,20 +114,20 @@ class CacheManager(SqlValidator):
         self._running_queries: List[Query] = []
         self._query_by_task_id: Dict[str, Query] = {}
 
-    def _fill_query_slots(self, queries: List[CacheQuery]) -> None:  # type: ignore[override]
+    def _fill_query_slots(self, queries: List[CacheQuery], reset: bool) -> None:  # type: ignore[override]
         """Creates query tasks until all slots are used or all queries are running"""
         while queries and self.query_slots > 0:
             logger.debug(
                 f"{self.query_slots} available query slots, creating query task"
             )
             query = queries.pop(0)
-            query_task_id = self.client.create_query_task(query.query_id)
+            query_task_id = self.client.create_query_task(query.query_id, reset)
             self.query_slots -= 1
             query.query_task_id = query_task_id
             self._query_by_task_id[query_task_id] = query
             self._running_queries.append(query)
 
-    def _run_queries(self, queries: List[CacheQuery]) -> None:  # type: ignore[override]
+    def _run_queries(self, queries: List[CacheQuery], reset: bool) -> None:  # type: ignore[override]
         """Creates and runs queries with a maximum concurrency defined by query slots"""
         QUERY_TASK_LIMIT = 250
 
@@ -134,7 +139,7 @@ class CacheManager(SqlValidator):
         while queries or self._running_queries:
             if queries:
                 logger.debug(f"Starting a new loop, {len(queries)} queries queued")
-                self._fill_query_slots(queries)
+                self._fill_query_slots(queries, reset)
             query_tasks = self.get_running_query_tasks()[:QUERY_TASK_LIMIT]
             logger.debug(f"Checking for results of {len(query_tasks)} query tasks")
             for query_result in self._get_query_results(query_tasks):
@@ -145,10 +150,10 @@ class CacheManager(SqlValidator):
 
         progress_bar.close()
 
-    def touch_cache(self, query_ids_list: List[int]):
+    def touch_cache(self, query_ids_list: List[int], reset: bool):
         queries = [CacheQuery(query_id=str(id)) for id in query_ids_list]
 
-        self._run_queries(queries)
+        self._run_queries(queries, reset)
 
     def _handle_query_result(self, result: QueryResult) -> Optional[SqlError]:
         query = self.get_query_by_task_id(result.query_task_id)

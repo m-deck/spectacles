@@ -48,9 +48,9 @@ class LookerCacheClient(LookerClient):
         url = utils.compose_url(self.api_url, path=["query_tasks"])
 
         if reset:
-            reset_string = 'false'  # user-facing value of "reset" indicates whether to bust the cache. API is opposite
+            reset_string = "false"  # user-facing value of "reset" indicates whether to bust the cache. API is opposite
         else:
-            reset_string = 'true'
+            reset_string = "true"
 
         response = self.post(
             url=url, json=body, params={"cache": reset_string}, timeout=TIMEOUT_SEC

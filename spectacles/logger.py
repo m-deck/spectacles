@@ -15,7 +15,7 @@ COLORS = {
 }
 
 logger = logging.getLogger("spectacles")
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 ch = logging.StreamHandler()
 ch.setLevel(logging.INFO)

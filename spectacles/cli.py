@@ -248,21 +248,21 @@ def main():
             args.concurrency,
             args.commit_ref,
         )
-    elif args.command == "assert":
-        run_assert(
-            args.project,
-            args.branch,
-            args.explores,
-            args.exclude,
-            args.base_url,
-            args.client_id,
-            args.client_secret,
-            args.port,
-            args.api_version,
-            args.remote_reset,
-            args.import_projects,
-            args.commit_ref,
-        )
+    # elif args.command == "assert":
+    #     run_assert(
+    #         args.project,
+    #         args.branch,
+    #         args.explores,
+    #         args.exclude,
+    #         args.base_url,
+    #         args.client_id,
+    #         args.client_secret,
+    #         args.port,
+    #         args.api_version,
+    #         args.remote_reset,
+    #         args.import_projects,
+    #         args.commit_ref,
+    #     )
     elif args.command == "content":
         run_content(
             args.project,

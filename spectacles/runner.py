@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Optional, NamedTuple
 import itertools
 from spectacles.client import LookerClient
-from spectacles.validators import SqlValidator, DataTestValidator, ContentValidator
+from spectacles.validators import SqlValidator, ContentValidator
 from spectacles.utils import time_hash
 from spectacles.logger import GLOBAL_LOGGER as logger
 from spectacles.printer import print_header

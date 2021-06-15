@@ -190,23 +190,23 @@ class Runner:
             results = validator.validate(mode)
         return results
 
-    def validate_data_tests(
-        self, selectors: List[str], exclusions: List[str]
-    ) -> Dict[str, Any]:
-        with self.branch_manager:
-            validator = DataTestValidator(self.client, self.project)
-            logger.info(
-                "Building LookML project hierarchy for project "
-                f"'{self.project}' @ {self.branch_manager.ref}"
-            )
-            validator.build_project(selectors, exclusions)
-            explore_count = validator.project.count_explores()
-            print_header(
-                f"Running data tests based on {explore_count} "
-                f"{'explore' if explore_count == 1 else 'explores'}"
-            )
-            results = validator.validate()
-        return results
+    # def validate_data_tests(
+    #     self, selectors: List[str], exclusions: List[str]
+    # ) -> Dict[str, Any]:
+    #     with self.branch_manager:
+    #         validator = DataTestValidator(self.client, self.project)
+    #         logger.info(
+    #             "Building LookML project hierarchy for project "
+    #             f"'{self.project}' @ {self.branch_manager.ref}"
+    #         )
+    #         validator.build_project(selectors, exclusions)
+    #         explore_count = validator.project.count_explores()
+    #         print_header(
+    #             f"Running data tests based on {explore_count} "
+    #             f"{'explore' if explore_count == 1 else 'explores'}"
+    #         )
+    #         results = validator.validate()
+    #     return results
 
     def validate_content(
         self,

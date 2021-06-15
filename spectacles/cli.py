@@ -248,21 +248,21 @@ def main():
             args.concurrency,
             args.commit_ref,
         )
-    elif args.command == "assert":
-        run_assert(
-            args.project,
-            args.branch,
-            args.explores,
-            args.exclude,
-            args.base_url,
-            args.client_id,
-            args.client_secret,
-            args.port,
-            args.api_version,
-            args.remote_reset,
-            args.import_projects,
-            args.commit_ref,
-        )
+    # elif args.command == "assert":
+    #     run_assert(
+    #         args.project,
+    #         args.branch,
+    #         args.explores,
+    #         args.exclude,
+    #         args.base_url,
+    #         args.client_id,
+    #         args.client_secret,
+    #         args.port,
+    #         args.api_version,
+    #         args.remote_reset,
+    #         args.import_projects,
+    #         args.commit_ref,
+    #     )
     elif args.command == "content":
         run_content(
             args.project,
@@ -629,56 +629,56 @@ def run_content(
         logger.info("")
 
 
-@log_duration
-def run_assert(
-    project,
-    branch,
-    explores,
-    exclude,
-    base_url,
-    client_id,
-    client_secret,
-    port,
-    api_version,
-    remote_reset,
-    import_projects,
-    commit_ref,
-) -> None:
-    runner = Runner(
-        base_url,
-        project,
-        branch,
-        client_id,
-        client_secret,
-        port,
-        api_version,
-        remote_reset,
-        import_projects,
-        commit_ref,
-    )
-    results = runner.validate_data_tests(explores, exclude)
-
-    for test in sorted(results["tested"], key=lambda x: (x["model"], x["explore"])):
-        message = f"{test['model']}.{test['explore']}"
-        printer.print_validation_result(passed=test["passed"], source=message)
-
-    errors = sorted(
-        results["errors"],
-        key=lambda x: (x["model"], x["explore"], x["metadata"]["test_name"]),
-    )
-    if errors:
-        for error in errors:
-            printer.print_data_test_error(
-                error["model"],
-                error["explore"],
-                error["metadata"]["test_name"],
-                error["message"],
-                error["metadata"]["lookml_url"],
-            )
-        logger.info("")
-        raise GenericValidationError
-    else:
-        logger.info("")
+# @log_duration
+# def run_assert(
+#     project,
+#     branch,
+#     explores,
+#     exclude,
+#     base_url,
+#     client_id,
+#     client_secret,
+#     port,
+#     api_version,
+#     remote_reset,
+#     import_projects,
+#     commit_ref,
+# ) -> None:
+#     runner = Runner(
+#         base_url,
+#         project,
+#         branch,
+#         client_id,
+#         client_secret,
+#         port,
+#         api_version,
+#         remote_reset,
+#         import_projects,
+#         commit_ref,
+#     )
+#     results = runner.validate_data_tests(explores, exclude)
+#
+#     for test in sorted(results["tested"], key=lambda x: (x["model"], x["explore"])):
+#         message = f"{test['model']}.{test['explore']}"
+#         printer.print_validation_result(passed=test["passed"], source=message)
+#
+#     errors = sorted(
+#         results["errors"],
+#         key=lambda x: (x["model"], x["explore"], x["metadata"]["test_name"]),
+#     )
+#     if errors:
+#         for error in errors:
+#             printer.print_data_test_error(
+#                 error["model"],
+#                 error["explore"],
+#                 error["metadata"]["test_name"],
+#                 error["message"],
+#                 error["metadata"]["lookml_url"],
+#             )
+#         logger.info("")
+#         raise GenericValidationError
+#     else:
+#         logger.info("")
 
 
 @log_duration

@@ -316,34 +316,34 @@ def test_main_with_content_validator(mock_tracking, mock_runner, env, caplog):
     assert "ecommerce.users failed" in caplog.text
 
 
-@patch("sys.argv", new=["spectacles", "assert"])
-@patch("spectacles.cli.Runner", autospec=True)
-@patch("spectacles.cli.tracking")
-def test_main_with_assert_validator(mock_tracking, mock_runner, env, caplog):
-    validation = build_validation("assert")
-    mock_runner.return_value.validate_data_tests.return_value = validation
-    with pytest.raises(SystemExit):
-        main()
-    mock_tracking.track_invocation_start.assert_called_once_with(
-        "BASE_URL_ENV_VAR", "assert", project="PROJECT_ENV_VAR"
-    )
-    # TODO: Uncomment the below assertion once #262 is fixed
-    # mock_tracking.track_invocation_end.assert_called_once()
-    mock_runner.assert_called_once_with(
-        "BASE_URL_ENV_VAR",  # base_url
-        "PROJECT_ENV_VAR",  # project
-        "BRANCH_ENV_VAR",  # branch
-        "CLIENT_ID_ENV_VAR",  # client_id
-        "CLIENT_SECRET_ENV_VAR",  # client_secret
-        8080,  # port
-        3.1,  # api_version
-        False,  # remote_reset
-        False,  # import_projects
-        None,  # commit_ref
-    )
-    assert "ecommerce.orders passed" in caplog.text
-    assert "ecommerce.sessions passed" in caplog.text
-    assert "ecommerce.users failed" in caplog.text
+# @patch("sys.argv", new=["spectacles", "assert"])
+# @patch("spectacles.cli.Runner", autospec=True)
+# @patch("spectacles.cli.tracking")
+# def test_main_with_assert_validator(mock_tracking, mock_runner, env, caplog):
+#     validation = build_validation("assert")
+#     mock_runner.return_value.validate_data_tests.return_value = validation
+#     with pytest.raises(SystemExit):
+#         main()
+#     mock_tracking.track_invocation_start.assert_called_once_with(
+#         "BASE_URL_ENV_VAR", "assert", project="PROJECT_ENV_VAR"
+#     )
+#     # TODO: Uncomment the below assertion once #262 is fixed
+#     # mock_tracking.track_invocation_end.assert_called_once()
+#     mock_runner.assert_called_once_with(
+#         "BASE_URL_ENV_VAR",  # base_url
+#         "PROJECT_ENV_VAR",  # project
+#         "BRANCH_ENV_VAR",  # branch
+#         "CLIENT_ID_ENV_VAR",  # client_id
+#         "CLIENT_SECRET_ENV_VAR",  # client_secret
+#         8080,  # port
+#         3.1,  # api_version
+#         False,  # remote_reset
+#         False,  # import_projects
+#         None,  # commit_ref
+#     )
+#     assert "ecommerce.orders passed" in caplog.text
+#     assert "ecommerce.sessions passed" in caplog.text
+#     assert "ecommerce.users failed" in caplog.text
 
 
 @patch("sys.argv", new=["spectacles", "connect"])
